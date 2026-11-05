@@ -88,15 +88,17 @@ export default function Editor({ fuente, filtroInicial = 'original', textoCancel
 
   return (
     <div className="fixed inset-0 z-[60] flex flex-col bg-roble text-papel" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
-      <div className="grid min-h-0 flex-1 place-items-center p-4">
-        {error ? (
-          <p className="max-w-xs text-center text-papel-2">{error}</p>
-        ) : !origen ? (
-          <p className="text-papel-2">Preparando foto…</p>
-        ) : (
-          <canvas ref={lienzoRef} className="rounded-sm shadow-2xl" style={{ maxWidth: '100%', maxHeight: '100%' }} />
-        )}
-      </div>
+         <div className="relative min-h-0 flex-1 overflow-hidden">
+            <div className="absolute inset-4 grid place-items-center">
+              {error ? (
+                <p className="max-w-xs text-center text-papel-2">{error}</p>
+              ) : !origen ? (
+                <p className="text-papel-2">Preparando foto…</p>
+              ) : (
+                <canvas ref={lienzoRef} className="size-full object-contain" />
+              )}
+            </div>
+          </div>
 
       <div className="border-t border-ocre/20 bg-roble-2/80">
         <div className="flex">

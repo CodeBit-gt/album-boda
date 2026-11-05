@@ -6,8 +6,8 @@ import { crearCanvas } from './canvas';
 export async function prepararFuentes() {
   try {
     await Promise.all([
-      document.fonts.load('500 40px Caveat', 'Ana & Luis 0123456789'),
-      document.fonts.load('italic 600 40px "Cormorant Garamond"', 'Ana & Luis'),
+      document.fonts.load('500 40px Caveat', 'Alex & Valery 0123456789'),
+      document.fonts.load('italic 600 40px "Cormorant Garamond"', 'Alex & Valery'),
       document.fonts.load('400 30px Jost', 'Otoño 2026'),
       document.fonts.load('500 30px Jost', 'Otoño 2026'),
     ]);
