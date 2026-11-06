@@ -31,13 +31,14 @@ Edita nombres y fecha en `web/src/config.js`.
 - La cámara propia **solo funciona en HTTPS** (o en `localhost`). En la laptop usa `npm run dev`; para probarla desde el celular en tu Wi-Fi usa `npm run dev:https` y abre la dirección `https://192.168.x.x:5173` (el navegador avisará que el certificado no es de confianza: *Avanzado → Continuar*). Con Netlify ya es HTTPS.
 - Filtros: `web/src/lib/filtros.js` · Marcos: `web/src/lib/marcos.js` · Textos de los marcos: `web/src/config.js`.
 
-## 3. Despliegue
-**Netlify (recomendado):** sube el repo a GitHub → Netlify → *Add new site → Import* → Base directory `web`,
-Build command `npm run build`, Publish directory `web/dist` → en *Site settings → Environment variables*
-añade `VITE_APPS_SCRIPT_URL` → Deploy.
-
-**GitHub Pages:** `cd web && npm run build` y publica el contenido de `web/dist` en la rama `gh-pages`
-(por ejemplo `npx gh-pages -d dist`). La URL de Apps Script debe estar en `.env` al construir.
+## 3. Despliegue en GitHub Pages
+El repositorio incluye `.github/workflows/deploy.yml`: cada `git push` a `main` compila `web/` y lo publica.
+1. Crea un repositorio **público** en GitHub y sube **toda** la carpeta `album-boda` (la carpeta `.github` debe quedar en la raíz del repo).
+2. *Settings → Pages → Build and deployment → Source:* **GitHub Actions**.
+3. *Settings → Secrets and variables → Actions → pestaña Variables → New repository variable*:
+   nombre `VITE_APPS_SCRIPT_URL`, valor tu URL `/exec`.
+4. *Actions → Desplegar en GitHub Pages → Run workflow* (o haz un nuevo push).
+5. La web queda en `https://TU_USUARIO.github.io/NOMBRE_DEL_REPO/` (ya con HTTPS, necesario para la cámara).
 
 ## 4. QR / NFC
 Genera un QR con la URL final (por ejemplo en qr-code-generator.com, gratis) y escribe la misma URL en una

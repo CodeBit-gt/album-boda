@@ -98,6 +98,12 @@ export default function UploadView({ onSubida }) {
 
   return (
     <section className="mx-auto flex w-full max-w-md flex-col items-center px-6 pb-8 pt-10 text-center">
+      <img
+        src={`${import.meta.env.BASE_URL}sello.png`}
+        alt="Sello de la boda"
+        width="112"
+        className="mb-5 h-auto w-28 drop-shadow-[0_6px_14px_rgba(0,0,0,.55)]"
+      />
       <p className="font-display text-lg italic text-ocre">{BODA.fecha}</p>
       <h1 className="mt-1 font-display text-5xl font-medium leading-tight sm:text-6xl">{BODA.novios}</h1>
       <p className="mt-4 max-w-xs text-[15px] leading-relaxed text-papel-2">{BODA.mensaje}</p>

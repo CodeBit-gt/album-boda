@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => ({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icon.svg'],
+      includeAssets: ['favicon.png', 'sello.png'],
       manifest: {
         name: 'Álbum de la boda',
         short_name: 'Álbum',
