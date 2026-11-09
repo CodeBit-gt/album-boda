@@ -1,6 +1,6 @@
 import { BODA } from '../config';
 
-const COLORES = { papel: '#f6f0e3', roble: '#2b1b16', vino: '#52192a', ocre: '#d9a441', hoja: '#7b8159', ladrillo: '#a4502a', rojo: '#8e2f2f' };
+const COLORES = { papel: '#f6f0e3', roble: '#1d2e1f', vino: '#7a3045', ocre: '#c7943d', hoja: '#556b2f', ladrillo: '#b75d3e', rojo: '#7a3045', cafe: '#b88c64' };
 
 // Hoja de otoño dibujada con curvas. (x, y) = centro, t = tamaño, ang = giro en radianes.
 function hoja(ctx, x, y, t, ang, color) {
@@ -110,7 +110,7 @@ export const MARCOS = [
           [0.9, 0.5, 0.8, 0.5, COLORES.ocre],
           [-0.3, 1.0, 0.85, -1.4, COLORES.rojo],
           [1.5, -0.2, 0.65, 1.2, COLORES.hoja],
-          [0.5, 1.6, 0.6, 2.3, COLORES.ocre],
+          [0.5, 1.6, 0.6, 2.3, COLORES.cafe],
         ];
         for (const [dx, dy, k, a, c] of lista) hoja(ctx, cx + dx * u * giro, cy + dy * u * giro, u * k, a * giro, c);
       };
@@ -126,8 +126,8 @@ export const MARCOS = [
     pad: (s) => ({ t: s * 0.075, r: s * 0.075, b: s * 0.21, l: s * 0.075 }),
     fondo(ctx, W, H) {
       const g = ctx.createLinearGradient(0, 0, W, H);
-      g.addColorStop(0, '#5e1f31');
-      g.addColorStop(1, '#3f1220');
+      g.addColorStop(0, '#6b2a3d');
+      g.addColorStop(1, '#3f1824');
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, W, H);
     },

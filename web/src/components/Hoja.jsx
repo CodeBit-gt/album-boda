@@ -7,7 +7,7 @@ export default function Hoja({ className = '' }) {
         fill="currentColor"
         opacity=".92"
       />
-      <path d="M32 18v36M32 30l-8-6M32 38l9-7M32 46l-7-5" stroke="#2b1b16" strokeWidth="2" strokeLinecap="round" />
+      <path d="M32 18v36M32 30l-8-6M32 38l9-7M32 46l-7-5" style={{ stroke: 'var(--color-roble)' }} strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }

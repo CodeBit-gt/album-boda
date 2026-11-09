@@ -72,6 +72,17 @@ export async function obtenerArchivo(id, nombreBase) {
   return new File([bytes], `${nombreBase}.${ext}`, { type: json.mime });
 }
 
+/** Traduce el error técnico a algo que el invitado (o tú) pueda entender. */
+export function motivoError(err) {
+  const m = String(err?.message || err || '');
+  if (/SyntaxError|Unexpected token|not valid JSON/i.test(m))
+    return 'El servidor no reconoce el envío: falta actualizar Apps Script (nueva versión)';
+  if (/Failed to fetch|Load failed|NetworkError|network/i.test(m))
+    return 'Sin conexión, o el archivo es muy pesado';
+  if (/demasiado grande/i.test(m)) return 'El archivo es demasiado grande';
+  return m.slice(0, 90) || 'Error desconocido';
+}
+
 export const urlFoto = (id, ancho = 600) => `https://lh3.googleusercontent.com/d/${id}=w${ancho}`;
 export const urlVideo = (id) => `https://drive.google.com/file/d/${id}/preview`;
 export const urlDescarga = (id) => `https://drive.google.com/uc?export=download&id=${id}`;

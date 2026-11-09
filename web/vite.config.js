@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import basicSsl from '@vitejs/plugin-basic-ssl';
+import { paleta } from './src/temas.js';
 
 export default defineConfig(({ mode }) => ({
   // './' funciona igual en Netlify y en GitHub Pages (subcarpeta del repo)
@@ -24,8 +25,8 @@ export default defineConfig(({ mode }) => ({
         scope: './',
         display: 'standalone',
         orientation: 'portrait',
-        background_color: '#2f4f2f',
-        theme_color: '#b88c64',
+        background_color: paleta.roble,
+        theme_color: paleta.roble,
         icons: [
           { src: 'pwa-192.png', sizes: '192x192', type: 'image/png' },
           { src: 'pwa-512.png', sizes: '512x512', type: 'image/png' },

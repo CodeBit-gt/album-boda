@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { BODA, ROLLO, VIDEO } from '../config';
-import { enviarFoto, enviarVideo } from '../lib/api';
+import { paleta } from '../temas';
+import { enviarFoto, enviarVideo, motivoError } from '../lib/api';
 import { blobABase64, blobACanvas, canvasABlob, comprimirImagen } from '../lib/imagen';
 import { renderizar } from '../lib/render';
 import { useRollo } from '../lib/rollo';
@@ -96,7 +97,7 @@ export default function UploadView({ onSubida, onIrAGaleria }) {
       if (x) URL.revokeObjectURL(x.url);
       return prev.filter((i) => i.id !== id);
     });
-  const marcar = (id, estado) => setItems((prev) => prev.map((i) => (i.id === id ? { ...i, estado } : i)));
+  const marcar = (id, estado, motivo = '') => setItems((prev) => prev.map((i) => (i.id === id ? { ...i, estado, motivo } : i)));
 
   const alElegirGaleria = (e) => {
     const elegidos = Array.from(e.target.files || []).filter((f) => f.type.startsWith('image/') || /\.(heic|heif)$/i.test(f.name) || esVideo(f));
@@ -125,7 +126,7 @@ export default function UploadView({ onSubida, onIrAGaleria }) {
         subidas++;
       } catch (err) {
         console.error(err);
-        marcar(item.id, 'error');
+        marcar(item.id, 'error', motivoError(err));
       }
     }
     setEnviando(false);
@@ -145,14 +146,38 @@ export default function UploadView({ onSubida, onIrAGaleria }) {
 
   return (
     <section className="mx-auto flex w-full max-w-md flex-col items-center px-6 pb-8 pt-10 text-center">
-      <img
-        src={`${import.meta.env.BASE_URL}sello.png`}
-        alt="Sello de la boda"
-        width="112"
-        className="mb-5 h-auto w-28 drop-shadow-[0_6px_14px_rgba(0,0,0,.55)]"
-      />
+      {BODA.foto ? (
+        // Foto de los novios en arco, con el sello de cera "estampado" abajo
+        <div className="relative mb-9">
+          <img
+            src={`${import.meta.env.BASE_URL}${BODA.foto}`}
+            alt={`Foto de ${BODA.novios}`}
+            width="200"
+            height="250"
+            className="h-[250px] w-[200px] rounded-b-md rounded-t-[100px] border-2 border-ocre object-cover shadow-[0_12px_32px_rgba(0,0,0,.5)]"
+          />
+          <img
+            src={`${import.meta.env.BASE_URL}sello.png`}
+            alt="Sello de la boda"
+            width="76"
+            className="absolute -bottom-7 left-1/2 h-auto w-[76px] -translate-x-1/2 drop-shadow-[0_6px_10px_rgba(0,0,0,.6)]"
+          />
+        </div>
+      ) : (
+        <img
+          src={`${import.meta.env.BASE_URL}sello.png`}
+          alt="Sello de la boda"
+          width="112"
+          className="mb-5 h-auto w-28 drop-shadow-[0_6px_14px_rgba(0,0,0,.55)]"
+        />
+      )}
       <p className="font-display text-lg italic text-ocre">{BODA.fecha}</p>
       <h1 className="mt-1 font-display text-5xl font-medium leading-tight sm:text-6xl">{BODA.novios}</h1>
+      {paleta.acentos && (
+        <div className="mt-4 flex gap-2" aria-hidden="true">
+          {paleta.acentos.map((c) => <span key={c} className="size-2.5 rounded-full border border-papel/25" style={{ background: c }} />)}
+        </div>
+      )}
       <p className="mt-4 max-w-xs text-[15px] leading-relaxed text-papel-2">{BODA.mensaje}</p>
 
       {/* Botón principal + contador de fotos, como una cámara desechable */}
@@ -162,7 +187,7 @@ export default function UploadView({ onSubida, onIrAGaleria }) {
           type="button"
           onClick={abrirCamara}
           disabled={sinRollo}
-          className="relative flex size-60 flex-col items-center justify-center gap-3 rounded-full border-2 border-ocre bg-vino text-papel shadow-[0_0_0_10px_var(--color-roble),0_0_0_11px_rgba(217,164,65,.45)] transition active:scale-95 disabled:opacity-70"
+          className="relative flex size-60 flex-col items-center justify-center gap-3 rounded-full border-2 border-ocre bg-vino text-papel shadow-[0_0_0_10px_var(--color-roble),0_0_0_11px_color-mix(in_srgb,var(--color-ocre)_45%,transparent)] transition active:scale-95 disabled:opacity-70"
         >
           <Hoja className="size-14 text-ocre" />
           <span className="font-display text-3xl font-medium leading-none">{sinRollo ? 'Rollo terminado' : 'Tomar foto'}</span>
@@ -201,6 +226,10 @@ export default function UploadView({ onSubida, onIrAGaleria }) {
 
       <input ref={galeriaRef} type="file" accept="image/*,video/*" multiple onChange={alElegirGaleria} className="hidden" />
       <input ref={capturaRef} type="file" accept="image/*" capture="environment" onChange={alCapturarConSistema} className="hidden" />
+
+      {envios.estado.errores > 0 && envios.estado.pendientes === 0 && envios.estado.motivo && (
+        <p role="alert" className="mt-2 max-w-xs text-xs leading-relaxed text-papel-2">{envios.estado.motivo}</p>
+      )}
 
       {avisos.map((a) => (
         <p key={a} role="alert" className="mt-4 max-w-xs rounded-lg bg-vino/40 px-4 py-3 text-sm leading-relaxed">{a}</p>
@@ -245,6 +274,9 @@ export default function UploadView({ onSubida, onIrAGaleria }) {
               </li>
             ))}
           </ul>
+          {[...new Set(items.filter((i) => i.estado === 'error' && i.motivo).map((i) => i.motivo))].map((m) => (
+            <p key={m} role="alert" className="mt-3 text-xs leading-relaxed text-papel-2">{m}</p>
+          ))}
           <button
             type="button"
             onClick={enviar}

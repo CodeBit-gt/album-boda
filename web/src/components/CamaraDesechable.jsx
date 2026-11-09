@@ -233,6 +233,9 @@ export default function CamaraDesechable({ restantes, estado, onDisparo, onVideo
             <button type="button" onClick={onReintentar} className="text-ocre underline underline-offset-4">
               {estado.errores} sin enviar · Reintentar
             </button>
+          ) : null}
+          {!aviso && estado.pendientes === 0 && estado.errores > 0 && estado.motivo ? (
+            <span className="mt-1 block text-xs text-papel-2">{estado.motivo}</span>
           ) : estado.ok > 0 ? (
             <span className="text-papel-2">✓ {estado.ok} {estado.ok === 1 ? 'enviado' : 'enviados'}</span>
           ) : null}

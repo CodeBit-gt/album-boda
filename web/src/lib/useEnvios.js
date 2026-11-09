@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { enviarFoto, enviarVideo } from './api';
+import { enviarFoto, enviarVideo, motivoError } from './api';
 import { blobABase64 } from './imagen';
 
 let n = 0;
@@ -10,8 +10,8 @@ export function useEnvios(onSubida) {
   const [envios, setEnvios] = useState([]); // { id, blob, meta, estado: 'enviando' | 'ok' | 'error' }
   const cola = useRef(Promise.resolve());
 
-  const marcar = (id, estado, borrarBlob = false) =>
-    setEnvios((prev) => prev.map((e) => (e.id === id ? { ...e, estado, blob: borrarBlob ? null : e.blob } : e)));
+  const marcar = (id, estado, borrarBlob = false, motivo = '') =>
+    setEnvios((prev) => prev.map((e) => (e.id === id ? { ...e, estado, motivo, blob: borrarBlob ? null : e.blob } : e)));
 
   const subir = useCallback(async (id, blob, meta) => {
     try {
@@ -22,7 +22,7 @@ export function useEnvios(onSubida) {
       onSubida?.();
     } catch (err) {
       console.error(err);
-      marcar(id, 'error');
+      marcar(id, 'error', false, motivoError(err));
     }
   }, [onSubida]);
 
@@ -46,6 +46,7 @@ export function useEnvios(onSubida) {
     pendientes: envios.filter((e) => e.estado === 'enviando').length,
     errores: envios.filter((e) => e.estado === 'error').length,
     ok: envios.filter((e) => e.estado === 'ok').length,
+    motivo: [...envios].reverse().find((e) => e.estado === 'error')?.motivo || '',
   }), [envios]);
 
   useEffect(() => {
