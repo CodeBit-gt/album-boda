@@ -83,7 +83,7 @@ export const MARCOS = [
       fila(r.y / 2);
       fila(H - (H - (r.y + r.h)) * 0.28);
       const cy = r.y + r.h + (H - (r.y + r.h)) * 0.42;
-      texto(ctx, `▸    ${BODA.novios.toUpperCase()}   ${BODA.lema.toUpperCase()}`, W / 2, cy, `500 ${s * 0.034}px Jost, sans-serif`, '#e8a13a');
+      texto(ctx, `▸ 14   ${BODA.novios.toUpperCase()}   ${BODA.lema.toUpperCase()}`, W / 2, cy, `500 ${s * 0.034}px Jost, sans-serif`, '#e8a13a');
       ctx.strokeStyle = 'rgba(232,161,58,.55)';
       ctx.lineWidth = Math.max(1, s * 0.003);
       ctx.strokeRect(r.x, r.y, r.w, r.h);

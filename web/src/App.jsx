@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import UploadView from './components/UploadView';
 import GalleryView from './components/GalleryView';
+import Marca from './components/Marca';
 
 export default function App() {
   const [vista, setVista] = useState('subir');
@@ -23,10 +24,13 @@ export default function App() {
     <div className="flex min-h-dvh flex-col">
       <main className="flex-1 pb-24">
         {vista === 'subir' ? (
-          <UploadView onSubida={() => setClave((c) => c + 1)} />
+          <UploadView onSubida={() => setClave((c) => c + 1)} onIrAGaleria={() => setVista('galeria')} />
         ) : (
           <GalleryView refrescarClave={clave} />
         )}
+        <footer className="px-6 pb-2 text-center">
+          <Marca origen="pie" />
+        </footer>
       </main>
 
       <nav

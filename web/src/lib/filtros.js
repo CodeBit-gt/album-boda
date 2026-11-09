@@ -7,6 +7,12 @@
 export const FILTROS = [
   { id: 'original', nombre: 'Original', css: {} },
   {
+    id: 'desechable', nombre: 'Desechable',
+    css: { sepia: 0.14, saturate: 1.28, contrast: 1.12, brightness: 1.05 },
+    tinte: { color: '#e8a23a', alpha: 0.2, mezcla: 'soft-light' },
+    fade: 0.07, grano: 0.55, vineta: 0.45,
+  },
+  {
     id: 'cosecha', nombre: 'Cosecha',
     css: { sepia: 0.25, saturate: 1.3, contrast: 1.05, brightness: 1.05 },
     tinte: { color: '#e2902b', alpha: 0.22, mezcla: 'soft-light' },
