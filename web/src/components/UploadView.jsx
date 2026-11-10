@@ -9,6 +9,7 @@ import { useEnvios } from '../lib/useEnvios';
 import Hoja from './Hoja';
 import CamaraDesechable from './CamaraDesechable';
 import Editor from './Editor';
+import MensajeNovios from './MensajeNovios';
 
 let contador = 0;
 const nuevoId = () => `${Date.now()}-${contador++}`;
@@ -24,7 +25,7 @@ const abiertaComoApp = () =>
   typeof window !== 'undefined' &&
   (window.matchMedia?.('(display-mode: standalone)').matches || window.navigator.standalone === true);
 
-export default function UploadView({ onSubida, onIrAGaleria }) {
+export default function UploadView({ onSubida, onIrAGaleria, puedeVerGaleria = false }) {
   const galeriaRef = useRef(null);
   const capturaRef = useRef(null);
   const proceso = useRef(Promise.resolve()); // revela las fotos de una en una
@@ -37,6 +38,7 @@ export default function UploadView({ onSubida, onIrAGaleria }) {
   const [enviando, setEnviando] = useState(false);
   const [terminado, setTerminado] = useState(false);
   const [avisos, setAvisos] = useState([]); // videos rechazados por pesados
+  const [mensajeAbierto, setMensajeAbierto] = useState(false);
 
   useEffect(() => () => items.forEach((i) => URL.revokeObjectURL(i.url)), []); // eslint-disable-line
 
@@ -199,7 +201,7 @@ export default function UploadView({ onSubida, onIrAGaleria }) {
 
       <p className="mt-6 max-w-xs text-sm leading-relaxed text-papel-2">
         {sinRollo
-          ? 'Gracias por compartir tus fotos. Mira cómo quedó el álbum en la galería.'
+          ? 'Gracias por compartir tus fotos. Si quiere, deje unas palabras para los novios.'
           : 'Cámara desechable: cada foto se envía sola y no se puede repetir.'}
       </p>
 
@@ -234,6 +236,8 @@ export default function UploadView({ onSubida, onIrAGaleria }) {
       {avisos.map((a) => (
         <p key={a} role="alert" className="mt-4 max-w-xs rounded-lg bg-vino/40 px-4 py-3 text-sm leading-relaxed">{a}</p>
       ))}
+
+      <MensajeNovios abierto={mensajeAbierto} onAbrir={() => setMensajeAbierto(true)} />
 
       {terminado && (
         <p role="status" className="mt-10 font-display text-2xl italic text-papel">
@@ -296,7 +300,9 @@ export default function UploadView({ onSubida, onIrAGaleria }) {
           onVideo={guardarVideo}
           onReintentar={envios.reintentar}
           onCerrar={() => setPanel(null)}
+          puedeVerGaleria={puedeVerGaleria}
           onVerGaleria={() => { setPanel(null); onIrAGaleria?.(); }}
+          onMensaje={() => { setPanel(null); setMensajeAbierto(true); }}
         />
       )}
       {panel?.tipo === 'editor' && (

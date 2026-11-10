@@ -112,7 +112,7 @@ export default function Editor({ fuente, filtroInicial = 'original', textoCancel
   );
 
   return (
-    <div className="fixed inset-0 z-[60] flex flex-col bg-roble text-papel" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+    <div className="fixed inset-0 z-[60] flex flex-col bg-roble text-papel landscape:flex-row" style={{ paddingTop: 'env(safe-area-inset-top)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}>
       {/* Zona de la foto: ocupa lo que sobra y la imagen se ajusta dentro sin desbordar */}
       <div ref={areaRef} className="relative min-h-0 flex-1 overflow-hidden">
         <div className="absolute inset-0 grid place-items-center">
@@ -126,7 +126,7 @@ export default function Editor({ fuente, filtroInicial = 'original', textoCancel
         </div>
       </div>
 
-      <div className="border-t border-ocre/20 bg-roble-2/80">
+      <div className="border-t border-ocre/20 bg-roble-2/80 landscape:flex landscape:w-80 landscape:shrink-0 landscape:flex-col landscape:justify-center landscape:overflow-y-auto landscape:border-l landscape:border-t-0">
         <div className="flex">
           {[['filtros', 'Filtros'], ['marcos', 'Marcos']].map(([id, t]) => (
             <button

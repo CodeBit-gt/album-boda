@@ -24,7 +24,7 @@ export default defineConfig(({ mode }) => ({
         start_url: './',
         scope: './',
         display: 'standalone',
-        orientation: 'portrait',
+        orientation: 'any',
         background_color: paleta.roble,
         theme_color: paleta.roble,
         icons: [

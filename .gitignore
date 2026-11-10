@@ -1,9 +1,3 @@
-node_modules/
-dist/
-dev-dist/
+node_modules
+dist
 .env
-.venv/
-__pycache__/
-# Fotos y videos generados por generar_video.py (no subir al repositorio)
-video/trabajo/
-*.mp4

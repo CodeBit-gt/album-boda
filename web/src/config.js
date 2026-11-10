@@ -1,7 +1,7 @@
 // Edita estos datos con los de la boda.
 export const BODA = {
   novios: 'Alex & Valery',
-  fecha: '5 de diciembre de 2026',
+  fecha: '05 de diciembre de 2026',
   fechaCorta: '05 · 12 · 2026',   // se usa en los marcos de las fotos
   sello: "’26 12 05",             // sello de fecha estilo cámara antigua (año mes día)
   lema: 'Otoño 2026',
@@ -27,7 +27,7 @@ export const VIDEO = {
 export const MARCA = {
   texto: 'Desarrollado por',
   nombre: 'CodeBit',
-  url: 'https://codebit-gt.github.io/',
+  url: '', // pega aquí la dirección de tu página, por ejemplo 'https://tu-pagina.com'
 };
 
 // URL de Apps Script (variable de entorno VITE_APPS_SCRIPT_URL)

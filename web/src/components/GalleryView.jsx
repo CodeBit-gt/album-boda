@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { listarFotos, obtenerArchivo, urlDescarga, urlFoto, urlVideo } from '../lib/api';
 
-export default function GalleryView({ refrescarClave }) {
+export default function GalleryView({ refrescarClave, clave, onSalir }) {
   const [fotos, setFotos] = useState(null); // null = cargando
   const [error, setError] = useState('');
   const [abierta, setAbierta] = useState(null);
@@ -12,12 +12,13 @@ export default function GalleryView({ refrescarClave }) {
   const cargar = useCallback(async () => {
     try {
       setError('');
-      setFotos(await listarFotos(200));
+      setFotos(await listarFotos(200, clave));
     } catch (e) {
+      if (e.message === 'clave') { onSalir?.(); return; }
       setError('No se pudo cargar la galería. Revisa tu conexión.');
       setFotos((f) => f ?? []);
     }
-  }, []);
+  }, [clave]); // eslint-disable-line
 
   useEffect(() => {
     cargar();
@@ -38,7 +39,7 @@ export default function GalleryView({ refrescarClave }) {
     setNota('');
     if (!abierta) return;
     let vivo = true;
-    obtenerArchivo(abierta.id, `boda-${abierta.id.slice(0, 6)}`)
+    obtenerArchivo(abierta.id, `boda-${abierta.id.slice(0, 6)}`, clave)
       .then((f) => vivo && setArchivo(f))
       .catch(() => {});
     return () => { vivo = false; };
@@ -48,7 +49,7 @@ export default function GalleryView({ refrescarClave }) {
     let f = archivo;
     if (!f) {
       setPreparando(true);
-      try { f = await obtenerArchivo(abierta.id, `boda-${abierta.id.slice(0, 6)}`); } catch { f = null; }
+      try { f = await obtenerArchivo(abierta.id, `boda-${abierta.id.slice(0, 6)}`, clave); } catch { f = null; }
       setPreparando(false);
     }
     if (!f) {
@@ -76,13 +77,16 @@ export default function GalleryView({ refrescarClave }) {
     <section className="mx-auto w-full max-w-3xl px-3 pb-8 pt-8">
       <div className="mb-5 flex items-end justify-between px-2">
         <h2 className="font-display text-4xl font-medium">Galería</h2>
-        <button type="button" onClick={cargar} className="text-sm text-ocre underline underline-offset-4">Actualizar</button>
+        <div className="flex gap-4 text-sm">
+          <button type="button" onClick={cargar} className="text-ocre underline underline-offset-4">Actualizar</button>
+          <button type="button" onClick={onSalir} className="text-papel-2 underline underline-offset-4">Salir</button>
+        </div>
       </div>
 
       {error && <p className="px-2 text-sm text-papel-2">{error}</p>}
       {fotos === null && <p className="px-2 text-papel-2">Cargando…</p>}
       {fotos && fotos.length === 0 && !error && (
-        <p className="px-2 font-display text-xl italic text-papel-2">Aún no hay fotos. ¡Sé la primera persona en subir una!</p>
+        <p className="px-2 font-display text-xl italic text-papel-2">Aún no hay fotos. Aparecerán aquí cuando los invitados empiecen a enviarlas.</p>
       )}
 
       {/* Masonry con columnas CSS */}

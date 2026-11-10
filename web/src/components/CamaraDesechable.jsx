@@ -19,7 +19,7 @@ const elegirMime = () =>
     .find((t) => window.MediaRecorder.isTypeSupported?.(t)) || '';
 const mmss = (s) => `0:${String(s).padStart(2, '0')}`;
 
-export default function CamaraDesechable({ restantes, estado, onDisparo, onVideo, onReintentar, onCerrar, onVerGaleria }) {
+export default function CamaraDesechable({ restantes, estado, onDisparo, onVideo, onReintentar, onCerrar, onVerGaleria, onMensaje, puedeVerGaleria = false }) {
   const videoRef = useRef(null);
   const streamRef = useRef(null);
   const areaRef = useRef(null);
@@ -166,65 +166,74 @@ export default function CamaraDesechable({ restantes, estado, onDisparo, onVideo
   const bloqueado = enVideo ? restantes < costo : restantes < 1;
 
   return (
-    <div className="fixed inset-0 z-[60] flex flex-col bg-black text-papel" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
-      <div className="flex items-center justify-between px-4 py-3">
-        <button type="button" onClick={onCerrar} disabled={grabando} aria-label="Cerrar cámara" className="grid size-11 place-items-center rounded-full bg-white/10 text-2xl disabled:opacity-40">×</button>
-        <p className="font-display text-lg italic text-ocre">{BODA.novios}</p>
-        <button
-          type="button"
-          onClick={() => setLado((l) => (l === 'user' ? 'environment' : 'user'))}
-          disabled={grabando}
-          aria-label="Cambiar de cámara"
-          className="grid size-11 place-items-center rounded-full bg-white/10 disabled:opacity-40"
-        >
-          <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M4 8V6a2 2 0 0 1 2-2h2M20 8V6a2 2 0 0 0-2-2h-2M4 16v2a2 2 0 0 0 2 2h2M20 16v2a2 2 0 0 1-2 2h-2" />
-            <path d="M9 12a3 3 0 0 1 5.2-2M15 12a3 3 0 0 1-5.2 2" />
-          </svg>
-        </button>
+    <div
+      className="fixed inset-0 z-[60] flex flex-col bg-black text-papel landscape:flex-row"
+      style={{ paddingTop: 'env(safe-area-inset-top)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}
+    >
+      {/* Visor: ocupa todo el espacio libre y se adapta al girar el celular */}
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+        <div className="flex items-center justify-between px-4 py-3 landscape:py-2">
+          <button type="button" onClick={onCerrar} disabled={grabando} aria-label="Cerrar cámara" className="grid size-11 place-items-center rounded-full bg-white/10 text-2xl disabled:opacity-40">×</button>
+          <p className="font-display text-lg italic text-ocre">{BODA.novios}</p>
+          <button
+            type="button"
+            onClick={() => setLado((l) => (l === 'user' ? 'environment' : 'user'))}
+            disabled={grabando}
+            aria-label="Cambiar de cámara"
+            className="grid size-11 place-items-center rounded-full bg-white/10 disabled:opacity-40"
+          >
+            <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 8V6a2 2 0 0 1 2-2h2M20 8V6a2 2 0 0 0-2-2h-2M4 16v2a2 2 0 0 0 2 2h2M20 16v2a2 2 0 0 1-2 2h-2" />
+              <path d="M9 12a3 3 0 0 1 5.2-2M15 12a3 3 0 0 1-5.2 2" />
+            </svg>
+          </button>
+        </div>
+
+        <div ref={areaRef} className="relative grid min-h-0 flex-1 place-items-center overflow-hidden px-2 landscape:pb-2">
+          {error ? (
+            <p className="mx-auto max-w-xs px-6 text-center text-papel-2">{error}</p>
+          ) : (
+            <div className="relative overflow-hidden rounded-md bg-roble-2" style={{ width: caja.w, height: caja.h, isolation: 'isolate' }}>
+              <video
+                ref={videoRef}
+                playsInline
+                muted
+                autoPlay
+                onLoadedMetadata={alCargar}
+                onResize={alCargar}
+                className="absolute inset-0 size-full object-cover"
+                style={{ filter: enVideo ? undefined : cssFiltro(filtro), transform: lado === 'user' ? 'scaleX(-1)' : undefined }}
+              />
+              {/* El look de película y el sello de fecha son solo para fotos; los videos salen tal cual */}
+              {!enVideo && <CapasFiltro filtro={filtro} />}
+              {!enVideo && (
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute font-mono font-bold italic"
+                  style={{ right: s * 0.05, bottom: s * 0.04, fontSize: s * 0.058, color: '#ff9a2e', textShadow: `0 0 ${s * 0.018}px #ff5a00` }}
+                >
+                  {BODA.sello}
+                </span>
+              )}
+              {grabando && (
+                <div className="absolute left-3 top-3 flex items-center gap-2 rounded-full bg-black/60 px-3 py-1 text-sm" role="timer">
+                  <span className="size-2.5 animate-pulse rounded-full bg-red-500" />
+                  {mmss(seg)} / {mmss(VIDEO.segundos)}
+                </div>
+              )}
+              {!listo && <div className="absolute inset-0 grid place-items-center text-papel-2">Abriendo cámara…</div>}
+              <div className="pointer-events-none absolute inset-0 bg-white transition-opacity duration-150" style={{ opacity: flash ? 0.85 : 0 }} />
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* Visor */}
-      <div ref={areaRef} className="relative grid min-h-0 flex-1 place-items-center overflow-hidden px-2">
-        {error ? (
-          <p className="mx-auto max-w-xs px-6 text-center text-papel-2">{error}</p>
-        ) : (
-          <div className="relative overflow-hidden rounded-md bg-roble-2" style={{ width: caja.w, height: caja.h, isolation: 'isolate' }}>
-            <video
-              ref={videoRef}
-              playsInline
-              muted
-              autoPlay
-              onLoadedMetadata={alCargar}
-              className="absolute inset-0 size-full object-cover"
-              style={{ filter: enVideo ? undefined : cssFiltro(filtro), transform: lado === 'user' ? 'scaleX(-1)' : undefined }}
-            />
-            {/* El look de película y el sello de fecha son solo para fotos; los videos salen tal cual */}
-            {!enVideo && <CapasFiltro filtro={filtro} />}
-            {!enVideo && (
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute font-mono font-bold italic"
-                style={{ right: s * 0.05, bottom: s * 0.04, fontSize: s * 0.058, color: '#ff9a2e', textShadow: `0 0 ${s * 0.018}px #ff5a00` }}
-              >
-                {BODA.sello}
-              </span>
-            )}
-            {grabando && (
-              <div className="absolute left-3 top-3 flex items-center gap-2 rounded-full bg-black/60 px-3 py-1 text-sm" role="timer">
-                <span className="size-2.5 animate-pulse rounded-full bg-red-500" />
-                {mmss(seg)} / {mmss(VIDEO.segundos)}
-              </div>
-            )}
-            {!listo && <div className="absolute inset-0 grid place-items-center text-papel-2">Abriendo cámara…</div>}
-            <div className="pointer-events-none absolute inset-0 bg-white transition-opacity duration-150" style={{ opacity: flash ? 0.85 : 0 }} />
-          </div>
-        )}
-      </div>
-
-      {/* Contador y disparador */}
-      <div className="px-6 pt-3" style={{ paddingBottom: 'calc(1.25rem + env(safe-area-inset-bottom))' }}>
-        <div className="mb-3 min-h-6 text-center text-sm">
+      {/* Controles: abajo con el celular de pie, a la derecha con el celular acostado (como una cámara) */}
+      <div
+        className="flex flex-col px-6 pt-3 landscape:w-52 landscape:shrink-0 landscape:justify-center landscape:overflow-y-auto landscape:px-3 landscape:py-2"
+        style={{ paddingBottom: 'calc(1.25rem + env(safe-area-inset-bottom))' }}
+      >
+        <div className="mb-3 min-h-6 text-center text-sm landscape:mb-2">
           {aviso ? (
             <span className="text-ocre">{aviso}</span>
           ) : estado.pendientes > 0 ? (
@@ -233,36 +242,36 @@ export default function CamaraDesechable({ restantes, estado, onDisparo, onVideo
             <button type="button" onClick={onReintentar} className="text-ocre underline underline-offset-4">
               {estado.errores} sin enviar · Reintentar
             </button>
+          ) : estado.ok > 0 ? (
+            <span className="text-papel-2">✓ {estado.ok} {estado.ok === 1 ? 'enviado' : 'enviados'}</span>
           ) : null}
           {!aviso && estado.pendientes === 0 && estado.errores > 0 && estado.motivo ? (
             <span className="mt-1 block text-xs text-papel-2">{estado.motivo}</span>
-          ) : estado.ok > 0 ? (
-            <span className="text-papel-2">✓ {estado.ok} {estado.ok === 1 ? 'enviado' : 'enviados'}</span>
           ) : null}
         </div>
 
         {restantes > 0 ? (
           <>
             {puedeVideo && !grabando && (
-              <div className="mb-4 flex justify-center gap-2" role="group" aria-label="Foto o video">
+              <div className="mb-4 flex justify-center gap-2 landscape:mb-3" role="group" aria-label="Foto o video">
                 {[['foto', 'Foto'], ['video', 'Video']].map(([id, t]) => (
                   <button
                     key={id}
                     type="button"
                     onClick={() => setModo(id)}
                     aria-pressed={modo === id}
-                    className={`rounded-full border px-5 py-1.5 text-sm uppercase tracking-[0.14em] ${modo === id ? 'border-ocre bg-ocre text-roble' : 'border-white/25 text-papel'}`}
+                    className={`rounded-full border px-5 py-1.5 text-sm uppercase tracking-[0.14em] landscape:px-3.5 landscape:tracking-[0.08em] ${modo === id ? 'border-ocre bg-ocre text-roble' : 'border-white/25 text-papel'}`}
                   >
                     {t}
                   </button>
                 ))}
               </div>
             )}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between landscape:flex-col landscape:gap-4">
               <div className="flex items-center gap-3" aria-live="polite">
                 <span
                   key={restantes}
-                  className={`text-6xl font-medium leading-none tabular-nums ${pocas ? 'text-ocre' : 'text-papel'}`}
+                  className={`text-6xl font-medium leading-none tabular-nums landscape:text-5xl ${pocas ? 'text-ocre' : 'text-papel'}`}
                   style={{ animation: 'sube .35s ease-out' }}
                 >
                   {restantes}
@@ -276,7 +285,7 @@ export default function CamaraDesechable({ restantes, estado, onDisparo, onVideo
                 onClick={alTocarDisparador}
                 disabled={!listo || !!error || bloqueado}
                 aria-label={enVideo ? (grabando ? 'Detener video' : 'Grabar video') : 'Tomar foto'}
-                className="grid size-20 place-items-center rounded-full border-4 border-papel disabled:opacity-40"
+                className="grid size-20 shrink-0 place-items-center rounded-full border-4 border-papel disabled:opacity-40"
               >
                 {enVideo ? (
                   <span className={`bg-red-600 transition-all active:scale-90 ${grabando ? 'size-8 rounded-md' : 'size-14 rounded-full'}`} />
@@ -286,7 +295,7 @@ export default function CamaraDesechable({ restantes, estado, onDisparo, onVideo
               </button>
             </div>
             {enVideo && !grabando && (
-              <p className="mt-3 text-center text-xs text-papel-2">
+              <p className="mt-3 text-center text-xs text-papel-2 landscape:hidden">
                 Videos de hasta {VIDEO.segundos} segundos · cada video gasta {costo} {costo === 1 ? 'foto' : 'fotos'}
               </p>
             )}
@@ -295,9 +304,14 @@ export default function CamaraDesechable({ restantes, estado, onDisparo, onVideo
           <div className="text-center">
             <p className="font-display text-2xl italic">Se acabó tu rollo</p>
             <p className="mt-1 text-sm text-papel-2">Gracias por compartir tus fotos de la boda.</p>
-            <button type="button" onClick={onVerGaleria} className="mt-4 rounded-full bg-ocre px-8 py-3 font-medium text-roble">
-              Ver la galería
+            <button type="button" onClick={onMensaje} className="mt-4 w-full rounded-full bg-ocre px-4 py-3 font-medium text-roble">
+              Dejar un mensaje para los novios
             </button>
+            {puedeVerGaleria && (
+              <button type="button" onClick={onVerGaleria} className="mt-3 text-sm text-ocre underline underline-offset-4">
+                Ver la galería
+              </button>
+            )}
             <InvitacionMarca />
           </div>
         )}

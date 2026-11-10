@@ -11,6 +11,14 @@
 // 1) Pega aquí el ID de tu carpeta de Drive (lo que va después de /folders/ en su URL)
 const FOLDER_ID = '1GMkZq2EbTOB8eWHeMn9QtpFL04RVkSh6';
 
+// 2) Clave de los novios: sin ella nadie puede VER la lista de fotos (los invitados solo pueden subir).
+//    Cámbiala por algo que solo sepan los novios
+const CLAVE_NOVIOS = 'galeriaboda';
+
+// Cambia este texto cada vez que modifiques el código: sirve para comprobar qué versión está publicada
+// (abre TU_URL/exec?accion=version en el navegador).
+const VERSION = 'v4-privada-mensajes';
+
 const MAX_FOTO_BYTES = 15 * 1024 * 1024;   // el frontend envía ~0,5 MB
 const MAX_VIDEO_BYTES = 26 * 1024 * 1024;  // el frontend limita a ~20 MB
 const MAX_DESCARGA_BYTES = 12 * 1024 * 1024; // tamaño máximo que se entrega para "guardar en el celular"
@@ -26,6 +34,10 @@ function extension_(mime) {
   if (mime.indexOf('quicktime') > -1) return 'mov';
   if (mime.indexOf('3gpp') > -1) return '3gp';
   return 'mp4';
+}
+
+function esNovios_(p) {
+  return String(p.clave || '') === CLAVE_NOVIOS && CLAVE_NOVIOS !== 'CAMBIAR_ESTA_CLAVE';
 }
 
 function guardar_(bytes, mime) {
@@ -54,6 +66,17 @@ function doPost(e) {
     }
 
     const body = JSON.parse(e.postData.contents);
+
+    // Mensaje de un invitado para los novios: se guarda como archivo de texto en la carpeta (no aparece en la galería)
+    if (body.accion === 'mensaje') {
+      const texto = String(body.texto || '').trim().slice(0, 600);
+      if (!texto) return respuesta_({ ok: false, error: 'Mensaje vacío' });
+      const de = String(body.nombre || 'Anónimo').trim().slice(0, 60) || 'Anónimo';
+      const nombre = 'mensaje_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6) + '.txt';
+      DriveApp.getFolderById(FOLDER_ID).createFile(nombre, 'De: ' + de + '\n\n' + texto + '\n', 'text/plain');
+      return respuesta_({ ok: true });
+    }
+
     const mime = String(body.mime || '');
     if (mime.indexOf('image/') !== 0) return respuesta_({ ok: false, error: 'Solo se permiten imágenes' });
     const bytes = Utilities.base64Decode(body.data);
@@ -72,13 +95,19 @@ function enAlbum_(archivo) {
 }
 
 /**
- * ?limit=200            lista más recientes primero (caché de 15 s)
- * ?all=1                todas, de la más antigua a la más nueva (lo usa el script de video)
- * ?accion=obtener&id=…  devuelve una foto/video pequeño en base64 para "Guardar en mi celular"
+ * ?accion=version       muestra la versión publicada (para comprobar que desplegaste lo último)
+ * ?clave=…&limit=200    lista más recientes primero (caché de 15 s)            [solo novios]
+ * ?clave=…&all=1        todas, de la más antigua a la más nueva (script de video) [solo novios]
+ * ?clave=…&accion=obtener&id=…  entrega una foto/video pequeño en base64 para "Guardar en mi celular" [solo novios]
  */
 function doGet(e) {
   try {
     const p = (e && e.parameter) || {};
+
+    if (p.accion === 'version') return respuesta_({ ok: true, version: VERSION });
+
+    // Todo lo demás (ver la lista, descargar) es solo para los novios
+    if (!esNovios_(p)) return respuesta_({ ok: false, error: 'clave' });
 
     if (p.accion === 'obtener') {
       const f = DriveApp.getFileById(String(p.id || ''));

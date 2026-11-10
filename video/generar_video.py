@@ -6,11 +6,12 @@ Pasos: descarga las fotos -> las deja todas del mismo tamaño (con fondo desenfo
 sin recortar a nadie) -> FFmpeg las une con fundido cruzado -> añade música de fondo.
 
 Uso rápido:
-    python generar_video.py --url "https://script.google.com/macros/s/XXXX/exec" --audio musica.mp3
+    python generar_video.py --url "https://script.google.com/macros/s/XXXX/exec" --clave "TU_CLAVE" --audio musica.mp3
 
 Requisitos: FFmpeg instalado (sudo apt install ffmpeg) y `pip install -r requirements.txt`.
 """
 import argparse
+import os
 import shutil
 import subprocess
 import sys
@@ -24,13 +25,14 @@ EXTENSIONES = {".jpg", ".jpeg", ".png", ".webp"}
 
 
 # ───────────────────────────── Descarga ─────────────────────────────
-def listar_fotos(url: str) -> list[dict]:
-    r = requests.get(url, params={"all": "1"}, timeout=180)
+def listar_fotos(url: str, clave: str) -> list[dict]:
+    r = requests.get(url, params={"all": "1", "clave": clave}, timeout=180)
     r.raise_for_status()
     datos = r.json()
     if not datos.get("ok"):
         sys.exit(f"Apps Script respondió con error: {datos.get('error')}")
-    return datos["files"]  # ya vienen ordenadas de la más antigua a la más nueva
+    # Ya vienen ordenadas de la más antigua a la más nueva. Los videos del álbum (v=1) no entran al slideshow.
+    return [f for f in datos["files"] if not f.get("v")]
 
 
 def descargar_foto(file_id: str, destino: Path, sesion: requests.Session) -> bool:
@@ -53,9 +55,9 @@ def descargar_foto(file_id: str, destino: Path, sesion: requests.Session) -> boo
     return False
 
 
-def descargar_todas(url: str, carpeta: Path) -> list[Path]:
+def descargar_todas(url: str, clave: str, carpeta: Path) -> list[Path]:
     carpeta.mkdir(parents=True, exist_ok=True)
-    fotos = listar_fotos(url)
+    fotos = listar_fotos(url, clave)
     print(f"Fotos en el álbum: {len(fotos)}")
     rutas, fallidas = [], 0
     with requests.Session() as sesion:
@@ -194,6 +196,7 @@ def main() -> None:
     fuente = p.add_mutually_exclusive_group(required=True)
     fuente.add_argument("--url", help="URL /exec de Apps Script (descarga las fotos del álbum)")
     fuente.add_argument("--local", type=Path, help="Carpeta con fotos ya descargadas (omite la descarga)")
+    p.add_argument("--clave", default=os.environ.get("CLAVE_NOVIOS", ""), help="Clave de los novios (CLAVE_NOVIOS de Code.gs); con --url es obligatoria")
     p.add_argument("--audio", type=Path, help="Pista de fondo (mp3, m4a, wav…)")
     p.add_argument("--salida", type=Path, default=Path("boda_slideshow.mp4"))
     p.add_argument("--trabajo", type=Path, default=Path("trabajo"), help="Carpeta temporal (permite reanudar)")
@@ -222,7 +225,9 @@ def main() -> None:
     if args.local:
         originales = sorted(f for f in args.local.iterdir() if f.suffix.lower() in EXTENSIONES)
     else:
-        originales = descargar_todas(args.url, args.trabajo / "originales")
+        if not args.clave:
+            sys.exit("Falta --clave (la CLAVE_NOVIOS que pusiste en Code.gs).")
+        originales = descargar_todas(args.url, args.clave, args.trabajo / "originales")
     if not originales:
         sys.exit("No hay fotos para procesar.")
 
