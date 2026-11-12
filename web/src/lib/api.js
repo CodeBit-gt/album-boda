@@ -30,14 +30,14 @@ function comprobar() {
 }
 
 /** Sube una foto (base64 JPEG). */
-export function enviarFoto({ nombre, mime, base64 }) {
+export function enviarFoto({ nombre, mime, base64, o = '', m = '' }) {
   comprobar();
   return conReintentos(async () => {
     const res = await fetch(API_URL, {
       method: 'POST',
       // text/plain evita el preflight CORS que Apps Script no soporta
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ nombre, mime, data: base64 }),
+      body: JSON.stringify({ nombre, mime, data: base64, o, mini: m }),
     });
     const json = await leerJson(res);
     if (!json.ok) throw new Error(json.error || 'Error al guardar la foto');
@@ -65,8 +65,8 @@ export async function listarFotos(limite = 200, clave = '') {
   if (!API_URL) return [];
   const res = await fetch(`${API_URL}?limit=${limite}&clave=${encodeURIComponent(clave)}`);
   const json = await leerJson(res);
-  if (!json.ok) throw new Error(json.error || 'No se pudo cargar la galería'); // error === 'clave': clave incorrecta
-  return json.files;
+  if (!json.ok) throw new Error(json.error || 'No se pudo cargar la galería');
+  return json; // { files, novios, bloqueado, revela }
 }
 
 /** Mensaje de un invitado para los novios (se guarda como archivo de texto en Drive). */

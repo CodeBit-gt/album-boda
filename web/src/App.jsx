@@ -5,8 +5,8 @@ import Marca from './components/Marca';
 import AccesoNovios from './components/AccesoNovios';
 import { useAccesoNovios } from './lib/acceso';
 
-// Los invitados solo ven la cámara. Los novios entran con la dirección del álbum terminada en #novios
-// y su clave; después ven también la pestaña "Galería".
+// Todos ven la cámara y la galería. Hasta la hora de revelado, los invitados ven las fotos borrosas; los novios
+// entran con la dirección del álbum terminada en #novios y su clave, y las ven nítidas desde el principio.
 export default function App() {
   const acceso = useAccesoNovios();
   const [vista, setVista] = useState('subir');
@@ -44,17 +44,16 @@ export default function App() {
     </button>
   );
 
-  const verGaleria = acceso.esNovios && vista === 'galeria';
+  const verGaleria = vista === 'galeria';
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <main className={`flex-1 ${acceso.esNovios ? 'pb-24' : 'pb-6'}`}>
+      <main className="flex-1 pb-24">
         {verGaleria ? (
           <GalleryView refrescarClave={clave} clave={acceso.clave} onSalir={() => { acceso.salir(); setVista('subir'); }} />
         ) : (
           <UploadView
             onSubida={() => setClave((c) => c + 1)}
-            puedeVerGaleria={acceso.esNovios}
             onIrAGaleria={() => setVista('galeria')}
           />
         )}
@@ -63,7 +62,7 @@ export default function App() {
         </footer>
       </main>
 
-      {acceso.esNovios && (
+      {(
         <nav
           className="fixed inset-x-0 bottom-0 z-40 flex border-t border-ocre/30 bg-roble-2/95 backdrop-blur"
           style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { BODA, ROLLO, VIDEO } from '../config';
 import { paleta } from '../temas';
 import { enviarFoto, enviarVideo, motivoError } from '../lib/api';
-import { blobABase64, blobACanvas, canvasABlob, comprimirImagen } from '../lib/imagen';
+import { blobABase64, blobACanvas, canvasABlob, comprimirImagen, mosaico } from '../lib/imagen';
 import { renderizar } from '../lib/render';
 import { useRollo } from '../lib/rollo';
 import { useEnvios } from '../lib/useEnvios';
@@ -25,7 +25,7 @@ const abiertaComoApp = () =>
   typeof window !== 'undefined' &&
   (window.matchMedia?.('(display-mode: standalone)').matches || window.navigator.standalone === true);
 
-export default function UploadView({ onSubida, onIrAGaleria, puedeVerGaleria = false }) {
+export default function UploadView({ onSubida, onIrAGaleria, puedeVerGaleria = true }) {
   const galeriaRef = useRef(null);
   const capturaRef = useRef(null);
   const proceso = useRef(Promise.resolve()); // revela las fotos de una en una
@@ -122,7 +122,8 @@ export default function UploadView({ onSubida, onIrAGaleria, puedeVerGaleria = f
           await enviarVideo({ mime: item.file.type || 'video/mp4', base64: await blobABase64(item.file) });
         } else {
           const blob = item.lista ? item.file : await comprimirImagen(item.file);
-          await enviarFoto({ nombre: `${Date.now()}.jpg`, mime: 'image/jpeg', base64: await blobABase64(blob) });
+          const mos = await mosaico(blob).catch(() => ({ o: '', m: '' }));
+          await enviarFoto({ nombre: `${Date.now()}.jpg`, mime: 'image/jpeg', base64: await blobABase64(blob), ...mos });
         }
         marcar(item.id, 'ok');
         subidas++;
@@ -201,7 +202,7 @@ export default function UploadView({ onSubida, onIrAGaleria, puedeVerGaleria = f
 
       <p className="mt-6 max-w-xs text-sm leading-relaxed text-papel-2">
         {sinRollo
-          ? 'Gracias por compartir tus fotos. Si quiere, deje unas palabras para los novios.'
+          ? 'Gracias por compartir tus fotos. Se revelarán en la galería; mientras tanto, deje unas palabras para los novios.'
           : 'Cámara desechable: cada foto se envía sola y no se puede repetir.'}
       </p>
 

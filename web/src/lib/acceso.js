@@ -14,7 +14,8 @@ export function useAccesoNovios() {
   const entrar = useCallback(async (intento) => {
     const c = intento.trim();
     if (!c) throw new Error('Escribe la clave');
-    await listarFotos(1, c); // lanza 'clave' si es incorrecta
+    const r = await listarFotos(1, c);
+    if (!r.novios) throw new Error('clave');
     try { localStorage.setItem(CLAVE_LS, c); } catch { /* modo privado */ }
     setClave(c);
   }, []);

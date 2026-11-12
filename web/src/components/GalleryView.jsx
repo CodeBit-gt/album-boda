@@ -1,8 +1,31 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { BODA } from '../config';
 import { listarFotos, obtenerArchivo, urlDescarga, urlFoto, urlVideo } from '../lib/api';
+import { mosaicoADataUrl } from '../lib/imagen';
+
+const textoRevela = (ms) => {
+  if (!ms) return '';
+  try {
+    return new Intl.DateTimeFormat('es', { weekday: 'long', day: 'numeric', month: 'long', hour: 'numeric', minute: '2-digit', timeZone: BODA.zona }).format(new Date(ms));
+  } catch { return ''; }
+};
+
+/** Foto que todavía "se está revelando": solo manchas de color, sin ninguna foto detrás. */
+function Borrosa({ f }) {
+  const src = useMemo(() => (f.m ? mosaicoADataUrl(f.m) : ''), [f.m]);
+  const aspecto = f.v ? '16 / 9' : f.o === 'l' ? '4 / 3' : f.o === 's' ? '1 / 1' : '3 / 4';
+  return (
+    <div className="relative mb-2 break-inside-avoid overflow-hidden rounded-md bg-roble-2" style={{ aspectRatio: aspecto }} aria-hidden="true">
+      {src && <img src={src} alt="" className="absolute inset-0 size-full scale-125 object-cover blur-2xl" />}
+      <span className="absolute inset-0 grid place-items-center text-xs uppercase tracking-[0.18em] text-papel/70">
+        {f.v ? '▶ Video' : 'Revelando'}
+      </span>
+    </div>
+  );
+}
 
 export default function GalleryView({ refrescarClave, clave, onSalir }) {
-  const [fotos, setFotos] = useState(null); // null = cargando
+  const [datos, setDatos] = useState(null); // { files, novios, bloqueado, revela } · null = cargando
   const [error, setError] = useState('');
   const [abierta, setAbierta] = useState(null);
   const [archivo, setArchivo] = useState(null); // File listo para guardar
@@ -12,17 +35,18 @@ export default function GalleryView({ refrescarClave, clave, onSalir }) {
   const cargar = useCallback(async () => {
     try {
       setError('');
-      setFotos(await listarFotos(200, clave));
+      const r = await listarFotos(200, clave);
+      if (clave && !r.novios) { onSalir?.(); return; } // la clave dejó de valer
+      setDatos(r);
     } catch (e) {
-      if (e.message === 'clave') { onSalir?.(); return; }
       setError('No se pudo cargar la galería. Revisa tu conexión.');
-      setFotos((f) => f ?? []);
+      setDatos((d) => d ?? { files: [], bloqueado: false, revela: 0 });
     }
   }, [clave]); // eslint-disable-line
 
   useEffect(() => {
     cargar();
-    const t = setInterval(cargar, 30000);
+    const t = setInterval(cargar, 30000); // cuando llega la hora de revelado, se actualiza sola
     return () => clearInterval(t);
   }, [cargar, refrescarClave]);
 
@@ -43,7 +67,7 @@ export default function GalleryView({ refrescarClave, clave, onSalir }) {
       .then((f) => vivo && setArchivo(f))
       .catch(() => {});
     return () => { vivo = false; };
-  }, [abierta]);
+  }, [abierta, clave]);
 
   const guardar = async () => {
     let f = archivo;
@@ -73,46 +97,70 @@ export default function GalleryView({ refrescarClave, clave, onSalir }) {
     setNota('Se guardó en la carpeta de descargas de su celular.');
   };
 
+  const fotos = datos?.files ?? [];
+  const bloqueado = !!datos?.bloqueado;
+  const cuando = textoRevela(datos?.revela);
+
   return (
     <section className="mx-auto w-full max-w-3xl px-3 pb-8 pt-8">
-      <div className="mb-5 flex items-end justify-between px-2">
+      <div className="mb-3 flex items-end justify-between px-2">
         <h2 className="font-display text-4xl font-medium">Galería</h2>
         <div className="flex gap-4 text-sm">
           <button type="button" onClick={cargar} className="text-ocre underline underline-offset-4">Actualizar</button>
-          <button type="button" onClick={onSalir} className="text-papel-2 underline underline-offset-4">Salir</button>
+          {clave && <button type="button" onClick={onSalir} className="text-papel-2 underline underline-offset-4">Salir</button>}
         </div>
       </div>
 
+      {datos?.novios && (
+        <p className="mb-3 px-2 text-xs uppercase tracking-[0.16em] text-ocre">Modo novios · ve todo sin esperar</p>
+      )}
+
+      {bloqueado && (
+        <div className="mx-2 mb-5 rounded-2xl border border-ocre/30 bg-roble-2/60 px-5 py-4 text-center">
+          <p className="font-display text-2xl italic">Las fotos se están revelando</p>
+          <p className="mt-1 text-[15px] leading-relaxed text-papel-2">
+            {cuando ? `Podrá verlas con claridad el ${cuando}.` : 'Podrá verlas con claridad pronto.'}
+          </p>
+          <p className="mt-1 text-sm text-papel-2">
+            {fotos.length === 0 ? '' : `Ya hay ${fotos.length} ${fotos.length === 1 ? 'foto o video esperando' : 'fotos y videos esperando'}.`}
+          </p>
+        </div>
+      )}
+
       {error && <p className="px-2 text-sm text-papel-2">{error}</p>}
-      {fotos === null && <p className="px-2 text-papel-2">Cargando…</p>}
-      {fotos && fotos.length === 0 && !error && (
-        <p className="px-2 font-display text-xl italic text-papel-2">Aún no hay fotos. Aparecerán aquí cuando los invitados empiecen a enviarlas.</p>
+      {datos === null && <p className="px-2 text-papel-2">Cargando…</p>}
+      {datos && fotos.length === 0 && !error && (
+        <p className="px-2 font-display text-xl italic text-papel-2">
+          Aún no hay fotos. Aparecerán aquí cuando los invitados empiecen a enviarlas.
+        </p>
       )}
 
       {/* Masonry con columnas CSS */}
       <div className="columns-2 gap-2 sm:columns-3">
-        {fotos?.map((f) => (
-          <button
-            key={f.id}
-            type="button"
-            onClick={() => setAbierta(f)}
-            aria-label={f.v ? 'Abrir video' : 'Abrir foto'}
-            className="relative mb-2 block w-full break-inside-avoid overflow-hidden rounded-md bg-roble-2"
-          >
-            <img
-              src={urlFoto(f.id, 500)}
-              alt={f.v ? 'Video de la boda' : 'Foto de la boda'}
-              loading="lazy"
-              className={`block w-full object-cover ${f.v ? 'min-h-40' : 'min-h-24'}`}
-              onError={(e) => { e.currentTarget.style.visibility = 'hidden'; }}
-            />
-            {f.v ? (
-              <span className="absolute inset-0 grid place-items-center">
-                <span className="grid size-14 place-items-center rounded-full bg-black/55 text-2xl">▶</span>
-              </span>
-            ) : null}
-          </button>
-        ))}
+        {bloqueado
+          ? fotos.map((f, i) => <Borrosa key={`${f.t}-${i}`} f={f} />)
+          : fotos.map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                onClick={() => setAbierta(f)}
+                aria-label={f.v ? 'Abrir video' : 'Abrir foto'}
+                className="relative mb-2 block w-full break-inside-avoid overflow-hidden rounded-md bg-roble-2"
+              >
+                <img
+                  src={urlFoto(f.id, 500)}
+                  alt={f.v ? 'Video de la boda' : 'Foto de la boda'}
+                  loading="lazy"
+                  className={`block w-full object-cover ${f.v ? 'min-h-40' : 'min-h-24'}`}
+                  onError={(e) => { e.currentTarget.style.visibility = 'hidden'; }}
+                />
+                {f.v ? (
+                  <span className="absolute inset-0 grid place-items-center">
+                    <span className="grid size-14 place-items-center rounded-full bg-black/55 text-2xl">▶</span>
+                  </span>
+                ) : null}
+              </button>
+            ))}
       </div>
 
       {abierta && (

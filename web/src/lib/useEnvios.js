@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { enviarFoto, enviarVideo, motivoError } from './api';
-import { blobABase64 } from './imagen';
+import { blobABase64, mosaico } from './imagen';
 
 let n = 0;
 const nuevoId = () => `e${Date.now()}-${n++}`;
@@ -17,7 +17,10 @@ export function useEnvios(onSubida) {
     try {
       const base64 = await blobABase64(blob);
       if (meta.tipo === 'video') await enviarVideo({ mime: meta.mime, base64 });
-      else await enviarFoto({ nombre: `${Date.now()}.jpg`, mime: 'image/jpeg', base64 });
+      else {
+        const mos = await mosaico(blob).catch(() => ({ o: '', m: '' }));
+        await enviarFoto({ nombre: `${Date.now()}.jpg`, mime: 'image/jpeg', base64, ...mos });
+      }
       marcar(id, 'ok', true);
       onSubida?.();
     } catch (err) {
