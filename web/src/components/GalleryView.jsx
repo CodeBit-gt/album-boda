@@ -119,7 +119,7 @@ export default function GalleryView({ refrescarClave, clave, onSalir }) {
         <div className="mx-2 mb-5 rounded-2xl border border-ocre/30 bg-roble-2/60 px-5 py-4 text-center">
           <p className="font-display text-2xl italic">Las fotos se están revelando</p>
           <p className="mt-1 text-[15px] leading-relaxed text-papel-2">
-            {cuando ? `Podrá verlas con claridad el ${cuando}.` : 'Podrá verlas con claridad pronto.'}
+            {cuando ? `Podrá verlas con claridad el ${cuando}.` : 'Podrá verlas con claridad a partir de las 8 de la mañana.'}
           </p>
           <p className="mt-1 text-sm text-papel-2">
             {fotos.length === 0 ? '' : `Ya hay ${fotos.length} ${fotos.length === 1 ? 'foto o video esperando' : 'fotos y videos esperando'}.`}
