@@ -46,7 +46,7 @@ export default function MensajeNovios({ abierto, onAbrir }) {
         value={nombre}
         onChange={(e) => setNombre(e.target.value)}
         maxLength={60}
-        className="mt-1 w-full rounded-lg border border-ocre/30 bg-roble px-3 py-3 text-papel outline-none focus:border-ocre"
+        className="mt-1 w-full rounded-lg border border-ocre/30 bg-white/35 px-3 py-3 text-papel outline-none focus:border-ocre"
       />
       <label htmlFor="msg-texto" className="mt-4 block text-sm text-papel-2">Su mensaje para los novios</label>
       <textarea
@@ -55,14 +55,14 @@ export default function MensajeNovios({ abierto, onAbrir }) {
         onChange={(e) => setTexto(e.target.value)}
         maxLength={600}
         rows={5}
-        className="mt-1 w-full resize-none rounded-lg border border-ocre/30 bg-roble px-3 py-3 text-papel outline-none focus:border-ocre"
+        className="mt-1 w-full resize-none rounded-lg border border-ocre/30 bg-white/35 px-3 py-3 text-papel outline-none focus:border-ocre"
       />
       {estado === 'error' && <p role="alert" className="mt-2 text-xs text-ocre">{motivo}</p>}
       <button
         type="button"
         onClick={enviar}
         disabled={!texto.trim() || estado === 'enviando'}
-        className="mt-4 w-full rounded-full bg-ocre py-3.5 text-lg font-medium text-roble disabled:opacity-50"
+        className="mt-4 w-full rounded-full bg-ocre py-3.5 text-lg font-medium text-claro disabled:opacity-50"
       >
         {estado === 'enviando' ? 'Enviando…' : estado === 'error' ? 'Reintentar' : 'Enviar mensaje'}
       </button>

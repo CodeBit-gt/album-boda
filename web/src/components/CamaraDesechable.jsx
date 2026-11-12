@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { BODA, ROLLO, VIDEO } from '../config';
 import { cssFiltro, filtroPorId } from '../lib/filtros';
 import CapasFiltro from './CapasFiltro';
+import { estiloOscuro } from '../temas';
 import { InvitacionMarca } from './Marca';
 
 const filtro = filtroPorId('desechable');
@@ -168,7 +169,7 @@ export default function CamaraDesechable({ restantes, estado, onDisparo, onVideo
   return (
     <div
       className="fixed inset-0 z-[60] flex flex-col bg-black text-papel landscape:flex-row"
-      style={{ paddingTop: 'env(safe-area-inset-top)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}
+      style={{ ...estiloOscuro, paddingTop: 'env(safe-area-inset-top)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}
     >
       {/* Visor: ocupa todo el espacio libre y se adapta al girar el celular */}
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">

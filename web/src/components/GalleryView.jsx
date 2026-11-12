@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { BODA } from '../config';
 import { listarFotos, obtenerArchivo, urlDescarga, urlFoto, urlVideo } from '../lib/api';
 import { mosaicoADataUrl } from '../lib/imagen';
+import { estiloOscuro } from '../temas';
 
 const textoRevela = (ms) => {
   if (!ms) return '';
@@ -119,7 +120,7 @@ export default function GalleryView({ refrescarClave, clave, onSalir }) {
         <div className="mx-2 mb-5 rounded-2xl border border-ocre/30 bg-roble-2/60 px-5 py-4 text-center">
           <p className="font-display text-2xl italic">Las fotos se están revelando</p>
           <p className="mt-1 text-[15px] leading-relaxed text-papel-2">
-            {cuando ? `Podrá verlas con claridad el ${cuando}.` : 'Podrá verlas con claridad a partir de las 8 de la mañana.'}
+            {cuando ? `Podrá verlas con claridad el ${cuando}.` : 'Podrá verlas con claridad pronto.'}
           </p>
           <p className="mt-1 text-sm text-papel-2">
             {fotos.length === 0 ? '' : `Ya hay ${fotos.length} ${fotos.length === 1 ? 'foto o video esperando' : 'fotos y videos esperando'}.`}
@@ -164,7 +165,7 @@ export default function GalleryView({ refrescarClave, clave, onSalir }) {
       </div>
 
       {abierta && (
-        <div role="dialog" aria-modal="true" aria-label="Ampliado" className="fixed inset-0 z-50 flex flex-col items-center bg-roble/95 p-3">
+        <div role="dialog" aria-modal="true" aria-label="Ampliado" style={estiloOscuro} className="fixed inset-0 z-50 flex flex-col items-center bg-roble/95 p-3 text-papel">
           <button
             type="button"
             className="absolute right-4 top-4 z-10 grid size-11 place-items-center rounded-full bg-roble-2 text-2xl"

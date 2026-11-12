@@ -157,13 +157,13 @@ export default function UploadView({ onSubida, onIrAGaleria, puedeVerGaleria = t
             alt={`Foto de ${BODA.novios}`}
             width="200"
             height="250"
-            className="h-[250px] w-[200px] rounded-b-md rounded-t-[100px] border-2 border-ocre object-cover shadow-[0_12px_32px_rgba(0,0,0,.5)]"
+            className="h-[250px] w-[200px] rounded-b-md rounded-t-[100px] border-2 border-ocre object-cover shadow-[0_12px_28px_rgba(60,30,10,.4)]"
           />
           <img
             src={`${import.meta.env.BASE_URL}sello.png`}
             alt="Sello de la boda"
             width="76"
-            className="absolute -bottom-7 left-1/2 h-auto w-[76px] -translate-x-1/2 drop-shadow-[0_6px_10px_rgba(0,0,0,.6)]"
+            className="absolute -bottom-7 left-1/2 h-auto w-[76px] -translate-x-1/2 drop-shadow-[0_6px_10px_rgba(60,30,10,.5)]"
           />
         </div>
       ) : (
@@ -171,7 +171,7 @@ export default function UploadView({ onSubida, onIrAGaleria, puedeVerGaleria = t
           src={`${import.meta.env.BASE_URL}sello.png`}
           alt="Sello de la boda"
           width="112"
-          className="mb-5 h-auto w-28 drop-shadow-[0_6px_14px_rgba(0,0,0,.55)]"
+          className="mb-5 h-auto w-28 drop-shadow-[0_6px_12px_rgba(60,30,10,.45)]"
         />
       )}
       <p className="font-display text-lg italic text-ocre">{BODA.fecha}</p>
@@ -185,16 +185,16 @@ export default function UploadView({ onSubida, onIrAGaleria, puedeVerGaleria = t
 
       {/* Botón principal + contador de fotos, como una cámara desechable */}
       <div className="relative mt-10">
-        {!sinRollo && <span className="absolute inset-0 rounded-full border border-ocre" style={{ animation: 'latido 3.2s ease-in-out infinite' }} aria-hidden="true" />}
+        {!sinRollo && <span className="absolute inset-0 rounded-full border border-oro" style={{ animation: 'latido 3.2s ease-in-out infinite' }} aria-hidden="true" />}
         <button
           type="button"
           onClick={abrirCamara}
           disabled={sinRollo}
-          className="relative flex size-60 flex-col items-center justify-center gap-3 rounded-full border-2 border-ocre bg-vino text-papel shadow-[0_0_0_10px_var(--color-roble),0_0_0_11px_color-mix(in_srgb,var(--color-ocre)_45%,transparent)] transition active:scale-95 disabled:opacity-70"
+          className="relative flex size-60 flex-col items-center justify-center gap-3 rounded-full border-2 border-oro bg-vino text-claro shadow-[0_0_0_10px_var(--color-roble),0_0_0_11px_color-mix(in_srgb,var(--color-oro)_80%,transparent)] transition active:scale-95 disabled:opacity-70"
         >
-          <Hoja className="size-14 text-ocre" />
+          <Hoja className="size-14 text-oro" />
           <span className="font-display text-3xl font-medium leading-none">{sinRollo ? 'Rollo terminado' : 'Tomar foto'}</span>
-          <span className="text-sm uppercase tracking-[0.16em] text-papel-2">
+          <span className="text-sm uppercase tracking-[0.16em] text-claro/85">
             {sinRollo ? 'sin fotos' : `${rollo.restantes} de ${rollo.total} fotos`}
           </span>
         </button>
@@ -260,8 +260,8 @@ export default function UploadView({ onSubida, onIrAGaleria, puedeVerGaleria = t
                   <img src={i.url} alt="Vista previa" className="size-full object-cover" />
                 )}
                 {i.estado === 'enviando' && <div className="absolute inset-0 grid place-items-center bg-roble/70 text-sm">Subiendo…</div>}
-                {i.estado === 'ok' && <div className="absolute inset-0 grid place-items-center bg-hoja/70 text-2xl" aria-label="Enviada">✓</div>}
-                {i.estado === 'error' && <div className="absolute inset-0 grid place-items-center bg-vino/80 px-1 text-xs">No se envió</div>}
+                {i.estado === 'ok' && <div className="absolute inset-0 grid place-items-center bg-hoja/80 text-2xl text-claro" aria-label="Enviada">✓</div>}
+                {i.estado === 'error' && <div className="absolute inset-0 grid place-items-center bg-vino/85 px-1 text-xs text-claro">No se envió</div>}
                 {!enviando && i.estado !== 'ok' && (
                   <>
                     <button type="button" onClick={() => quitar(i.id)} aria-label="Quitar foto" className="absolute right-1 top-1 grid size-7 place-items-center rounded-full bg-roble/85 text-papel">×</button>
@@ -286,7 +286,7 @@ export default function UploadView({ onSubida, onIrAGaleria, puedeVerGaleria = t
             type="button"
             onClick={enviar}
             disabled={enviando}
-            className="mt-6 w-full rounded-full bg-ocre py-4 text-lg font-medium text-roble transition active:scale-[.98] disabled:opacity-60"
+            className="mt-6 w-full rounded-full bg-ocre py-4 text-lg font-medium text-claro transition active:scale-[.98] disabled:opacity-60"
           >
             {enviando ? `Enviando ${hechas + 1} de ${total}…` : hayErrores ? 'Reintentar envío' : total === 1 ? 'Enviar' : `Enviar ${total} archivos`}
           </button>

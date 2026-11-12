@@ -1,13 +1,15 @@
 @import "tailwindcss";
 
 @theme {
-  --color-roble: #1d2e1f;
-  --color-roble-2: #2f4f2f;
+  --color-roble: #b88c64;
+  --color-roble-2: #caa57f;
   --color-vino: #7a3045;
-  --color-ocre: #c7943d;
+  --color-oro: #c7943d;
+  --color-claro: #f3e9d8;
+  --color-ocre: #4e1828;
   --color-hoja: #556b2f;
-  --color-papel: #f3e9d8;
-  --color-papel-2: #d3b995;
+  --color-papel: #2a1a10;
+  --color-papel-2: #36231a;
 
   --font-display: "Cormorant Garamond", Georgia, serif;
   --font-sans: "Jost", system-ui, sans-serif;

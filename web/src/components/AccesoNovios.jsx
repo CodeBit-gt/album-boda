@@ -33,7 +33,7 @@ export default function AccesoNovios({ onEntrar, onCancelar }) {
         placeholder="Clave"
       />
       {error && <p role="alert" className="mt-3 text-sm text-ocre">{error}</p>}
-      <button type="button" onClick={entrar} disabled={cargando} className="mt-5 w-full rounded-full bg-ocre py-4 text-lg font-medium text-roble disabled:opacity-60">
+      <button type="button" onClick={entrar} disabled={cargando} className="mt-5 w-full rounded-full bg-ocre py-4 text-lg font-medium text-claro disabled:opacity-60">
         {cargando ? 'Comprobando…' : 'Entrar'}
       </button>
       <button type="button" onClick={onCancelar} className="mt-4 text-sm text-papel-2 underline underline-offset-4">Volver al álbum</button>

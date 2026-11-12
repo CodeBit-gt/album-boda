@@ -3,6 +3,7 @@ import { FILTROS } from '../lib/filtros';
 import { MARCOS } from '../lib/marcos';
 import { blobACanvas, canvasABlob } from '../lib/imagen';
 import { prepararFuentes, renderizar } from '../lib/render';
+import { estiloOscuro } from '../temas';
 
 const aUrl = (canvas) => canvas.toDataURL('image/jpeg', 0.82);
 
@@ -112,7 +113,7 @@ export default function Editor({ fuente, filtroInicial = 'original', textoCancel
   );
 
   return (
-    <div className="fixed inset-0 z-[60] flex flex-col bg-roble text-papel landscape:flex-row" style={{ paddingTop: 'env(safe-area-inset-top)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}>
+    <div className="fixed inset-0 z-[60] flex flex-col bg-roble text-papel landscape:flex-row" style={{ ...estiloOscuro, paddingTop: 'env(safe-area-inset-top)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}>
       {/* Zona de la foto: ocupa lo que sobra y la imagen se ajusta dentro sin desbordar */}
       <div ref={areaRef} className="relative min-h-0 flex-1 overflow-hidden">
         <div className="absolute inset-0 grid place-items-center">

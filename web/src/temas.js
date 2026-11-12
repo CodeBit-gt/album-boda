@@ -2,9 +2,16 @@
 // Para colores propios, edita 'personalizado' y pon TEMA = 'personalizado'.
 //   roble = fondo · roble-2 = tarjetas y barras · vino = botón principal · ocre = acento dorado
 //   hoja = confirmaciones · papel = texto · papel-2 = texto secundario
+// Paleta oscura que usan SIEMPRE la cámara, el editor y la foto ampliada (pantallas completas con fondo oscuro)
+export const OSCURA = { roble: '#1d2e1f', 'roble-2': '#2f4f2f', vino: '#7a3045', ocre: '#c7943d', oro: '#c7943d', hoja: '#556b2f', papel: '#f3e9d8', 'papel-2': '#d3b995', claro: '#f3e9d8' };
+
 export const TEMAS = {
-  // Paleta de la boda: café claro #B88C64 · vino #7A3045 · terracota #B75D3E · mostaza #C7943D · verde oliva #556B2F · verde oscuro #2F4F2F
-  boda:    { nombre: 'Boda', roble: '#1d2e1f', 'roble-2': '#2f4f2f', vino: '#7a3045', ocre: '#c7943d', hoja: '#556b2f', papel: '#f3e9d8', 'papel-2': '#d3b995',
+  // Paleta de la boda con fondo café claro (#B88C64), como la invitación: el sello rojo resalta.
+  //   ocre = vino oscuro (botones, enlaces, bordes) · oro = mostaza decorativa · claro = texto sobre botones oscuros
+  boda:    { nombre: 'Boda (café claro)', roble: '#b88c64', 'roble-2': '#caa57f', vino: '#7a3045', ocre: '#4e1828', oro: '#c7943d', hoja: '#556b2f', papel: '#2a1a10', 'papel-2': '#36231a', claro: '#f3e9d8',
+             acentos: ['#b88c64', '#7a3045', '#b75d3e', '#c7943d', '#556b2f', '#2f4f2f'] },
+  // La misma paleta con fondo verde oscuro
+  boda_oscuro: { nombre: 'Boda (verde oscuro)', ...OSCURA,
              acentos: ['#b88c64', '#7a3045', '#b75d3e', '#c7943d', '#556b2f', '#2f4f2f'] },
   otono:   { nombre: 'Otoño',   roble: '#2b1b16', 'roble-2': '#3a2620', vino: '#7a2a3a', ocre: '#d9a441', hoja: '#7b8159', papel: '#f1e6d3', 'papel-2': '#bfae96' },
   bosque:  { nombre: 'Bosque',  roble: '#14241c', 'roble-2': '#1f3328', vino: '#7a2a3a', ocre: '#d4b25a', hoja: '#8aa07a', papel: '#eef0e4', 'papel-2': '#aab7a4' },
@@ -15,4 +22,11 @@ TEMAS.personalizado = { ...TEMAS.otono, nombre: 'Personalizado' };
 
 export const TEMA = 'boda';
 
-export const paleta = TEMAS[TEMA] || TEMAS.otono;
+const elegida = TEMAS[TEMA] || TEMAS.boda;
+// Los temas oscuros viejos no definen 'oro' ni 'claro': se completan con sus colores de acento y de texto
+export const paleta = { oro: elegida.ocre, claro: elegida.papel, ...elegida };
+
+/** Variables CSS para pantallas completas oscuras (cámara, editor, foto ampliada) dentro de un tema claro. */
+export const estiloOscuro = Object.fromEntries(
+  Object.entries(OSCURA).map(([k, v]) => [`--color-${k}`, v])
+);

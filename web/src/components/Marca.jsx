@@ -19,10 +19,10 @@ export default function Marca({ origen = 'pie' }) {
   const href = enlace(origen);
   const contenido = (
     <>
-      {MARCA.texto} <span className="font-medium text-papel/80">{MARCA.nombre}</span>
+      {MARCA.texto} <span className="font-medium text-papel">{MARCA.nombre}</span>
     </>
   );
-  const clases = 'inline-block px-4 py-3 text-xs tracking-wide text-papel-2/70';
+  const clases = 'inline-block px-4 py-3 text-xs tracking-wide text-papel-2';
   return href ? (
     <a href={href} target="_blank" rel="noopener noreferrer" className={`${clases} underline-offset-4 hover:underline`}>
       {contenido}
