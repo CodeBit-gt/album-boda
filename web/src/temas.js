@@ -20,7 +20,7 @@ export const TEMAS = {
 };
 TEMAS.personalizado = { ...TEMAS.otono, nombre: 'Personalizado' };
 
-export const TEMA = 'boda';
+export const TEMA = 'noche';
 
 const elegida = TEMAS[TEMA] || TEMAS.boda;
 // Los temas oscuros viejos no definen 'oro' ni 'claro': se completan con sus colores de acento y de texto
