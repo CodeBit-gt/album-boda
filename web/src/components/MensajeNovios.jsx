@@ -24,7 +24,14 @@ export default function MensajeNovios({ abierto, onAbrir }) {
 
   if (!abierto) {
     return (
-      <button type="button" onClick={onAbrir} className="mt-4 text-[15px] text-ocre underline underline-offset-4">
+      <button
+        type="button"
+        onClick={onAbrir}
+        className="flex w-full items-center justify-center gap-3 rounded-full border-2 border-ocre px-6 py-4 text-lg font-medium text-ocre transition active:scale-[.98] active:bg-ocre/10"
+      >
+        <svg viewBox="0 0 24 24" className="size-6 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" />
+        </svg>
         Dejar un mensaje para los novios
       </button>
     );
@@ -32,14 +39,14 @@ export default function MensajeNovios({ abierto, onAbrir }) {
 
   if (estado === 'ok') {
     return (
-      <p role="status" className="mt-6 max-w-xs font-display text-2xl italic">
+      <p role="status" className="mt-1 text-center font-display text-2xl italic">
         ¡Gracias! Los novios leerán su mensaje.
       </p>
     );
   }
 
   return (
-    <div className="mt-6 w-full max-w-sm rounded-2xl border border-ocre/30 bg-roble-2/60 p-4 text-left">
+    <div className="w-full rounded-2xl border border-ocre/30 bg-roble-2/60 p-4 text-left">
       <label htmlFor="msg-nombre" className="text-sm text-papel-2">Su nombre (opcional)</label>
       <input
         id="msg-nombre"

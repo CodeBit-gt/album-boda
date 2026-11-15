@@ -218,14 +218,21 @@ export default function UploadView({ onSubida, onIrAGaleria, puedeVerGaleria = t
         </p>
       )}
 
-      <button
-        type="button"
-        onClick={() => galeriaRef.current?.click()}
-        disabled={enviando}
-        className="mt-8 text-[15px] text-ocre underline underline-offset-4 disabled:opacity-60"
-      >
-        o sube fotos y videos de tu galería
-      </button>
+      {/* Acciones secundarias: botones grandes y fáciles de tocar */}
+      <div className="mt-8 flex w-full max-w-sm flex-col gap-3">
+        <button
+          type="button"
+          onClick={() => galeriaRef.current?.click()}
+          disabled={enviando}
+          className="flex w-full items-center justify-center gap-3 rounded-full border-2 border-ocre px-6 py-4 text-lg font-medium text-ocre transition active:scale-[.98] active:bg-ocre/10 disabled:opacity-60"
+        >
+          <svg viewBox="0 0 24 24" className="size-6 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="16" rx="2" /><circle cx="9" cy="10" r="1.6" /><path d="m21 16-5-5-8 8" />
+          </svg>
+          Subir fotos o videos de mi galería
+        </button>
+        <MensajeNovios abierto={mensajeAbierto} onAbrir={() => setMensajeAbierto(true)} />
+      </div>
 
       <input ref={galeriaRef} type="file" accept="image/*,video/*" multiple onChange={alElegirGaleria} className="hidden" />
       <input ref={capturaRef} type="file" accept="image/*" capture="environment" onChange={alCapturarConSistema} className="hidden" />
@@ -237,8 +244,6 @@ export default function UploadView({ onSubida, onIrAGaleria, puedeVerGaleria = t
       {avisos.map((a) => (
         <p key={a} role="alert" className="mt-4 max-w-xs rounded-lg bg-vino/40 px-4 py-3 text-sm leading-relaxed">{a}</p>
       ))}
-
-      <MensajeNovios abierto={mensajeAbierto} onAbrir={() => setMensajeAbierto(true)} />
 
       {terminado && (
         <p role="status" className="mt-10 font-display text-2xl italic text-papel">
