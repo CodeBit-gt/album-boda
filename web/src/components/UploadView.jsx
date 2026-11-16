@@ -190,7 +190,7 @@ export default function UploadView({ onSubida, onIrAGaleria, puedeVerGaleria = t
           type="button"
           onClick={abrirCamara}
           disabled={sinRollo}
-          className="relative flex size-60 flex-col items-center justify-center gap-3 rounded-full border-2 border-oro bg-vino text-claro shadow-[0_0_0_10px_var(--color-roble),0_0_0_11px_color-mix(in_srgb,var(--color-oro)_80%,transparent)] transition active:scale-95 disabled:opacity-70"
+          className="relative flex size-60 flex-col items-center justify-center gap-3 rounded-full border-2 border-oro bg-vino text-claro shadow-[0_0_0_10px_var(--color-vino),0_0_0_11px_color-mix(in_srgb,var(--color-oro)_80%,transparent)] transition active:scale-95 disabled:opacity-70"
         >
           <Hoja className="size-14 text-oro" />
           <span className="font-display text-3xl font-medium leading-none">{sinRollo ? 'Rollo terminado' : 'Tomar foto'}</span>
