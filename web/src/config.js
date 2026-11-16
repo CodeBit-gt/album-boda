@@ -6,7 +6,7 @@ export const BODA = {
   sello: "’26 12 05",             // sello de fecha estilo cámara antigua (año mes día)
   lema: 'Otoño 2026',
   zona: 'America/Guatemala',      // zona horaria para mostrar la hora de revelado de las fotos
-  foto: '',                        // foto de los novios: copia el archivo a web/public y escribe su nombre, p. ej. 'novios.jpg'
+  foto: 'fotonueva1.jpg',                        // foto de los novios: copia el archivo a web/public y escribe su nombre, p. ej. 'novios.jpg'
   mensaje: 'Cada foto cuenta una parte de este día. Súbelas aquí y todas quedarán en el mismo álbum.',
 };
 
