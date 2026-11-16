@@ -13,7 +13,7 @@ export const TEMAS = {
   // La misma paleta con fondo verde oscuro
   boda_oscuro: { nombre: 'Boda (verde oscuro)', ...OSCURA,
              acentos: ['#b88c64', '#7a3045', '#b75d3e', '#c7943d', '#556b2f', '#2f4f2f'] },
-  otono:   { nombre: 'Otoño',   roble: '#f1e6d3', 'roble-2': '#7a3045', vino: '#7a2a3a', ocre: '#b75d3e', hoja: '#556b2f', papel: '#b88c64', 'papel-2': '#bfae96' },
+  otono:   { nombre: 'Otoño',   roble: '#f1e6d3', 'roble-2': '#7a3045', vino: '#2f4f2f', ocre: '#b75d3e', hoja: '#556b2f', papel: '#b88c64', 'papel-2': '#bfae96' },
   bosque:  { nombre: 'Bosque',  roble: '#14241c', 'roble-2': '#1f3328', vino: '#7a2a3a', ocre: '#d4b25a', hoja: '#8aa07a', papel: '#eef0e4', 'papel-2': '#aab7a4' },
   burdeos: { nombre: 'Burdeos', roble: '#2a0f18', 'roble-2': '#3b1824', vino: '#9a3350', ocre: '#e0b15a', hoja: '#8a8f5e', papel: '#f6e9df', 'papel-2': '#c3a9a3' },
   noche:   { nombre: 'Noche',   roble: '#101a2e', 'roble-2': '#19263f', vino: '#8b3a4f', ocre: '#d9b36a', hoja: '#7f9a86', papel: '#f0ece4', 'papel-2': '#aeb4c0' },
