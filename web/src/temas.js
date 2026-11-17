@@ -8,7 +8,7 @@ export const OSCURA = { roble: '#1d2e1f', 'roble-2': '#2f4f2f', vino: '#7a3045',
 export const TEMAS = {
   // Paleta de la boda con fondo café claro (#B88C64), como la invitación: el sello rojo resalta.
   //   ocre = vino oscuro (botones, enlaces, bordes) · oro = mostaza decorativa · claro = texto sobre botones oscuros
-  boda:    { nombre: 'Boda (café claro)', roble: '#b88c64', 'roble-2': '#caa57f', vino: '#7a3045', ocre: '#4e1828', oro: '#c7943d', hoja: '#556b2f', papel: '#2a1a10', 'papel-2': '#36231a', claro: '#f3e9d8',
+  boda:    { nombre: 'Boda (café claro)', roble: '#f1e6d3', 'roble-2': '#caa57f', vino: '#7a3045', ocre: '#4e1828', oro: '#c7943d', hoja: '#2f4f2f', papel: '#2a1a10', 'papel-2': '#36231a', claro: '#f3e9d8',
              acentos: ['#b88c64', '#7a3045', '#b75d3e', '#c7943d', '#556b2f', '#2f4f2f'] },
   // La misma paleta con fondo verde oscuro
   boda_oscuro: { nombre: 'Boda (verde oscuro)', ...OSCURA,

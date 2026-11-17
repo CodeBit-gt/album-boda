@@ -176,11 +176,6 @@ export default function UploadView({ onSubida, onIrAGaleria, puedeVerGaleria = t
       )}
       <p className="font-display text-lg italic text-ocre">{BODA.fecha}</p>
       <h1 className="mt-1 font-display text-5xl font-medium leading-tight sm:text-6xl">{BODA.novios}</h1>
-      {paleta.acentos && (
-        <div className="mt-4 flex gap-2" aria-hidden="true">
-          {paleta.acentos.map((c) => <span key={c} className="size-2.5 rounded-full border border-papel/25" style={{ background: c }} />)}
-        </div>
-      )}
       <p className="mt-4 max-w-xs text-[15px] leading-relaxed text-papel-2">{BODA.mensaje}</p>
 
       {/* Botón principal + contador de fotos, como una cámara desechable */}
