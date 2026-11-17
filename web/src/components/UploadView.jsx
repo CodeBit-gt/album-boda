@@ -175,8 +175,8 @@ export default function UploadView({ onSubida, onIrAGaleria, puedeVerGaleria = t
         />
       )}
       <p className="font-display text-lg italic text-ocre">{BODA.fecha}</p>
-      <h1 className="mt-1 font-display text-5xl font-medium leading-tight sm:text-6xl">{BODA.novios}</h1>
-      <p className="mt-4 max-w-xs text-[15px] leading-relaxed text-papel-2">{BODA.mensaje}</p>
+      <h1 className="mt-1 font-display text-5xl text-[#2f4f2f] font-medium leading-tight sm:text-6xl">{BODA.novios}</h1>
+      <p className="mt-4 max-w-xs text-[15px] leading-relaxed text-[#2f4f2f]">{BODA.mensaje}</p>
 
       {/* Botón principal + contador de fotos, como una cámara desechable */}
       <div className="relative mt-10">
@@ -195,7 +195,7 @@ export default function UploadView({ onSubida, onIrAGaleria, puedeVerGaleria = t
         </button>
       </div>
 
-      <p className="mt-6 max-w-xs text-sm leading-relaxed text-papel-2">
+      <p className="mt-6 max-w-xs text-sm leading-relaxed text-[#2f4f2f]">
         {sinRollo
           ? 'Gracias por compartir tus fotos. Se revelarán en la galería; mientras tanto, deje unas palabras para los novios.'
           : 'Para iniciar a tomar las fotos solo debes presionar el círculo de arriba. Al tomar la foto, esta se guardará automáticamente en el rollo, por lo que no se podrá editar ni eliminar luego para asegurar la espontaneidad.'}
