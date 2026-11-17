@@ -7,7 +7,7 @@ export const BODA = {
   lema: 'Otoño 2026',
   zona: 'America/Guatemala',      // zona horaria para mostrar la hora de revelado de las fotos
   foto: 'fotonueva1.jpg',                        // foto de los novios: copia el archivo a web/public y escribe su nombre, p. ej. 'novios.jpg'
-  mensaje: 'Cada foto cuenta una parte de este día. Súbelas aquí y todas quedarán en el mismo álbum.',
+  mensaje: 'Porque las fotos cuentan historias, dejamos esta cámara desechable con 20 fotos para que cuentes la nuestra desde tu perspectiva.',
 };
 
 // Cámara desechable: cuántas fotos puede tomar cada invitado (el contador se guarda en su celular)

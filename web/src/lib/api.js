@@ -65,7 +65,7 @@ export async function listarFotos(limite = 200, clave = '') {
   if (!API_URL) return [];
   const res = await fetch(`${API_URL}?limit=${limite}&clave=${encodeURIComponent(clave)}`);
   const json = await leerJson(res);
-  if (!json.ok) throw new Error(json.error || 'No se pudo cargar la galería');
+  if (!json.ok) throw new Error(json.error || 'No se pudo cargar el rollo');
   return json; // { files, novios, bloqueado, revela }
 }
 

@@ -68,7 +68,7 @@ export default function App() {
           style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
         >
           {tab('subir', 'Subir foto')}
-          {tab('galeria', 'Galería')}
+          {tab('galeria', 'Rollo')}
         </nav>
       )}
     </div>

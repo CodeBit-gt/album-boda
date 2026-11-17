@@ -198,7 +198,7 @@ export default function UploadView({ onSubida, onIrAGaleria, puedeVerGaleria = t
       <p className="mt-6 max-w-xs text-sm leading-relaxed text-papel-2">
         {sinRollo
           ? 'Gracias por compartir tus fotos. Se revelarán en la galería; mientras tanto, deje unas palabras para los novios.'
-          : 'Cámara desechable: cada foto se envía sola y no se puede repetir.'}
+          : 'Para iniciar a tomar las fotos solo debes presionar el círculo de arriba. Al tomar la foto, esta se guardará automáticamente en el rollo, por lo que no se podrá editar ni eliminar luego para asegurar la espontaneidad.'}
       </p>
 
       {(envios.estado.pendientes > 0 || envios.estado.errores > 0) && (

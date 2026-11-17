@@ -40,7 +40,7 @@ export default function GalleryView({ refrescarClave, clave, onSalir }) {
       if (clave && !r.novios) { onSalir?.(); return; } // la clave dejó de valer
       setDatos(r);
     } catch (e) {
-      setError('No se pudo cargar la galería. Revisa tu conexión.');
+      setError('No se pudo cargar el rollo. Revisa tu conexión.');
       setDatos((d) => d ?? { files: [], bloqueado: false, revela: 0 });
     }
   }, [clave]); // eslint-disable-line
@@ -105,7 +105,7 @@ export default function GalleryView({ refrescarClave, clave, onSalir }) {
   return (
     <section className="mx-auto w-full max-w-3xl px-3 pb-8 pt-8">
       <div className="mb-3 flex items-end justify-between px-2">
-        <h2 className="font-display text-4xl font-medium">Galería</h2>
+        <h2 className="font-display text-4xl font-medium">Rollo</h2>
         <div className="flex gap-4 text-sm">
           <button type="button" onClick={cargar} className="text-ocre underline underline-offset-4">Actualizar</button>
           {clave && <button type="button" onClick={onSalir} className="text-papel-2 underline underline-offset-4">Salir</button>}
